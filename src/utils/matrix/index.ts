@@ -1,0 +1,3 @@
+export { Vec4 } from './vec4';
+export { Mat4 } from './mat4';
+export { multiply } from './multiply';
