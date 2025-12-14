@@ -356,14 +356,10 @@ const testMatrix = function () {
   testMatrix8();
   testMatrix9();
   testMatrix10();
-
-  // 矩阵*矩阵测试
   testMatrixMul1();
   testMatrixMul2();
   testMatrixMul3();
   testMatrixMul4();
-
-  // 矩阵*矩阵*向量测试
   testMatrixMulVec1();
   testMatrixMulVec2();
   testMatrixMulVec3();
