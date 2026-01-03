@@ -1,4 +1,4 @@
-import { Mat4, Vec4, multiply, projection } from "../src/utils/matrix";
+import { Mat4, Vec4, multiply, projection, viewMat } from "../src/utils/matrix";
 import { ensure } from "./ensure";
 
 const testMatrix1 = function () {
@@ -355,6 +355,39 @@ const testProjection = function () {
   ensure(r, expect, "testProjection");
 };
 
+const testViewMat1 = function () {
+  const r = viewMat(new Vec4([0, 0, 0, 1]), new Vec4([0, 0, -5, 1]));
+  const expect = new Mat4([
+    1, 0, 0, 0,
+    0, 1, 0, 0,
+    0, 0, 1, 0,
+    0, 0, 0, 1,
+  ])
+  ensure(r, expect, "testViewMat1");
+}
+
+const testViewMat2 = function () {
+  const r = viewMat(new Vec4([0, 0, 0, 1]), new Vec4([0, -5, 0, 1]));
+  const expect = new Mat4([
+    -1, 0, 0, 0,
+    0, 0, 1, 0,
+    0, 1, 0, 0,
+    0, 0, 0, 1,
+])
+  ensure(r, expect, "testViewMat2");
+}
+
+const testViewMat3 = function () {
+  const r = viewMat(new Vec4([0, 1, 0, 1]), new Vec4([0, -5, -5, 1]));
+  const expect = new Mat4([
+    1, 0, 0, 0,
+    0, 0.6401843996644798, -0.768221279597376, -0.6401843996644798,
+    0, 0.7682212795973757, 0.6401843996644797, -0.7682212795973757,
+    0, 0, 0, 1,
+])
+  ensure(r, expect, "testViewMat3");
+}
+
 
 const testMatrix = function () {
   testMatrix1();
@@ -376,6 +409,9 @@ const testMatrix = function () {
   testMatrixMulVec3();
   testMatrixMulVec4();
   testProjection();
+  testViewMat1();
+  testViewMat2();
+  testViewMat3();
 };
 
 export {
