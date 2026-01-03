@@ -1,4 +1,4 @@
-import { Mat4, Vec4, multiply } from "../src/utils/matrix";
+import { Mat4, Vec4, multiply, projection } from "../src/utils/matrix";
 import { ensure } from "./ensure";
 
 const testMatrix1 = function () {
@@ -344,6 +344,17 @@ const testMatrixMulVec4 = function () {
   ensure(r, expect, "testMatrixMulVec4");
 };
 
+const testProjection = function () {
+  const r = projection(45, 1, 0.1, 100);
+  const expect = new Mat4([
+    2.4142135623730954, 0, 0, 0,
+    0, 2.4142135623730954, 0, 0,
+    0, 0, -1.002002002002002, -0.20020020020020018,
+    0, 0, -1, 0,
+  ])
+  ensure(r, expect, "testProjection");
+};
+
 
 const testMatrix = function () {
   testMatrix1();
@@ -364,6 +375,7 @@ const testMatrix = function () {
   testMatrixMulVec2();
   testMatrixMulVec3();
   testMatrixMulVec4();
+  testProjection();
 };
 
 export {
