@@ -1,5 +1,0 @@
-
-
-const main = function () {
-    testDraw();
-};

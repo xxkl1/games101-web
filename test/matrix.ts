@@ -1,4 +1,4 @@
-import { Mat4, Vec4, multiply, projection, viewMat } from "../src/utils/matrix";
+import { Mat4, Vec4, multiply, projection, rotate, viewMat } from "../src/utils/matrix";
 import { ensure } from "./ensure";
 
 const testMatrix1 = function () {
@@ -384,9 +384,44 @@ const testViewMat3 = function () {
     0, 0.6401843996644798, -0.768221279597376, -0.6401843996644798,
     0, 0.7682212795973757, 0.6401843996644797, -0.7682212795973757,
     0, 0, 0, 1,
-])
+  ])
   ensure(r, expect, "testViewMat3");
 }
+
+const testRotate1 = function () {
+  // 测试绕 X 轴旋转 90 度
+  const r = rotate(new Vec4([1, 0, 0, 1]), Math.PI / 2);
+  const expect = new Mat4([
+    1, 0, 0, 0,
+    0, 6.123233995736766e-17, -1, 0,
+    0, 1, 6.123233995736766e-17, 0,
+    0, 0, 0, 1,
+]);
+  ensure(r, expect, "testRotate2");
+};
+
+const testRotate2 = function () {
+  const r = rotate(new Vec4([0, 1, 0, 1]), 45);
+  const expect = new Mat4([
+    0.5253219888177297, 0, 0.8509035245341184, 0,
+    0, 1, 0, 0,
+    -0.8509035245341184, 0, 0.5253219888177297, 0,
+    0, 0, 0, 1,
+  ])
+  ensure(r, expect, "testRotate1");
+}
+
+const testRotate3 = function () {
+  // 测试绕 Z 轴旋转 90 度
+  const r = rotate(new Vec4([0, 0, 1, 1]), Math.PI / 2);
+  const expect = new Mat4([
+    6.123233995736766e-17, -1, 0, 0,
+    1, 6.123233995736766e-17, 0, 0,
+    0, 0, 1, 0,
+    0, 0, 0, 1,
+]);
+  ensure(r, expect, "testRotate3");
+};
 
 
 const testMatrix = function () {
@@ -412,6 +447,9 @@ const testMatrix = function () {
   testViewMat1();
   testViewMat2();
   testViewMat3();
+  testRotate1();
+  testRotate2();
+  testRotate3();
 };
 
 export {
