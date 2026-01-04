@@ -1,6 +1,13 @@
 import { drawPoint } from "./point";
 import type { Color, Point } from "./type";
 
+const copyPoint = function (point: Point) {
+    return {
+        x: point.x,
+        y: point.y,
+    }
+}
+
 /**
  * 使用布雷森汉姆直线算法，暂时不考虑去掉浮点数的优化，目前去掉浮点数的优化目前简单测试对js无效
  * @param imageData 画布
@@ -9,6 +16,13 @@ import type { Color, Point } from "./type";
  * @param color 颜色
  */
 const drawLine = function (imageData: ImageData, start: Point, end: Point, color: Color) {
+    start = copyPoint(start);
+    end = copyPoint(end);
+    start.x = Math.round(start.x);
+    start.y = Math.round(start.y);
+    end.x = Math.round(end.x);
+    end.y = Math.round(end.y);
+
     const steep = Math.abs(end.y - start.y) > Math.abs(end.x - start.x);
     // 斜率大于1，先进行反射变换，以保证转换为斜率小于等于1
     if (steep) {
