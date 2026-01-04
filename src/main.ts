@@ -1,13 +1,6 @@
+import { vec4ToPoint } from "./utils/common";
 import { drawLine } from "./utils/draw/line";
-import type { Point } from "./utils/draw/type";
-import { Mat4, multiply, ndc2Screen, projection, rotate, Vec4, viewMat } from "./utils/matrix";
-
-const vec4ToPoint = function (v: Vec4) : Point {
-  return {
-    x: v.value[0],
-    y: v.value[1],
-  }
-}
+import { multiply, ndc2Screen, projection, rotate, Vec4, viewMat } from "./utils/matrix";
 
 const main = function () {
   const canvas = document.getElementById("canvas") as HTMLCanvasElement;
@@ -32,6 +25,7 @@ const main = function () {
 
   const ctx = canvas.getContext("2d")!;
   ctx.putImageData(imageData, 0, 0);
+  console.log(Array.from(imageData.data));
 };
 
 main();
