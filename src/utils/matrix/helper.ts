@@ -19,20 +19,20 @@ const at = function (m: Mat4 | Vec4, row: number, col: number) {
 };
 
 const normalize = function (vec4: Vec4) {
-    const v = vec4.perspectiveDivide();
+    const v = vec4.perspectiveDivide().value;
     const len = Math.hypot(v[0], v[1], v[2]);
     return new Vec4([v[0] / len, v[1] / len, v[2] / len, 1]);
 }
 
 const dot = function(a: Vec4, b: Vec4) {
-    const aValue = a.perspectiveDivide();
-    const bValue = b.perspectiveDivide();
+    const aValue = a.perspectiveDivide().value;
+    const bValue = b.perspectiveDivide().value;
     return aValue[0] * bValue[0] + aValue[1] * bValue[1] + aValue[2] * bValue[2];
 }
 
 const cross = function (a: Vec4, b: Vec4) {
-    const aValue = a.perspectiveDivide();
-    const bValue = b.perspectiveDivide();
+    const aValue = a.perspectiveDivide().value;
+    const bValue = b.perspectiveDivide().value;
     return new Vec4([
         aValue[1] * bValue[2] - aValue[2] * bValue[1],
         aValue[2] * bValue[0] - aValue[0] * bValue[2],
@@ -42,8 +42,8 @@ const cross = function (a: Vec4, b: Vec4) {
 }
 
 const subtract = function (a: Vec4, b: Vec4) {
-    const aValue = a.perspectiveDivide();
-    const bValue = b.perspectiveDivide();
+    const aValue = a.perspectiveDivide().value;
+    const bValue = b.perspectiveDivide().value;
     return new Vec4([aValue[0] - bValue[0], aValue[1] - bValue[1], aValue[2] - bValue[2], 1]);
 }
 

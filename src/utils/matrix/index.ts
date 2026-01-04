@@ -4,3 +4,4 @@ export { multiply } from './multiply';
 export { projection } from './projection';
 export { viewMat } from './view';
 export { rotate } from './rotate';
+export { ndc2Screen } from './ndc2Screen';

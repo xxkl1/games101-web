@@ -7,7 +7,7 @@ class Vec4 {
     perspectiveDivide () {
         const v = this.value;
         const w = v[3];
-        return [v[0] / w, v[1] / w, v[2] / w, 1];
+        return new Vec4([v[0] / w, v[1] / w, v[2] / w, 1]);
     }
 }
 

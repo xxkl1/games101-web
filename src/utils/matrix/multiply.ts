@@ -3,7 +3,7 @@ import { Mat4 } from "./mat4"
 import { Vec4 } from "./vec4"
 
 
-const multiply = function (a: Mat4, b: Mat4 | Vec4) {
+const multiply = function <T extends (Mat4 | Vec4)> (a: Mat4, b: T) : T {
   if (b instanceof Mat4) {
     const value : number[] = [
       // 1行1列
@@ -43,7 +43,7 @@ const multiply = function (a: Mat4, b: Mat4 | Vec4) {
       at(a, 4, 1) * at(b, 1, 4) + at(a, 4, 2) * at(b, 2, 4) + at(a, 4, 3) * at(b, 3, 4) + at(a, 4, 4) * at(b, 4, 4),
     ];
 
-    return new Mat4(value);
+    return new Mat4(value) as T;
   }
   const value : number[] = [
     // 第1行1列
@@ -55,7 +55,7 @@ const multiply = function (a: Mat4, b: Mat4 | Vec4) {
     // 第4行1列
     at(a, 4, 1) * at(b, 1, 1) + at(a, 4, 2) * at(b, 2, 1) + at(a, 4, 3) * at(b, 3, 1) + at(a, 4, 4) * at(b, 4, 1),
   ];
-  return new Vec4(value);
+  return new Vec4(value) as T;
 };
 
 export {
