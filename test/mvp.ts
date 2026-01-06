@@ -9,6 +9,7 @@ import {
 } from "../src/utils/matrix";
 import { vec4ToPoint } from "../src/utils/common";
 import { ensure } from "./ensure";
+import { perspectiveDivide } from "../src/utils/matrix/perspectiveDivide";
 
 const testDrawMVP = function () {
     const w = 10;
@@ -25,19 +26,19 @@ const testDrawMVP = function () {
     const p1 = vec4ToPoint(
         multiply(
             ndc2ScreenMat,
-            multiply(mvp, new Vec4([0, 5, -5, 1])).perspectiveDivide()
+            perspectiveDivide(multiply(mvp, new Vec4([0, 5, -5, 1])))
         )
     );
     const p2 = vec4ToPoint(
         multiply(
             ndc2ScreenMat,
-            multiply(mvp, new Vec4([5, 0, -5, 1])).perspectiveDivide()
+            perspectiveDivide(multiply(mvp, new Vec4([5, 0, -5, 1])))
         )
     );
     const p3 = vec4ToPoint(
         multiply(
             ndc2ScreenMat,
-            multiply(mvp, new Vec4([-5, -5, -5, 1])).perspectiveDivide()
+            perspectiveDivide(multiply(mvp, new Vec4([-5, -5, -5, 1])))
         )
     );
 

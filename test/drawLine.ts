@@ -220,7 +220,7 @@ const testDrawLine6 = function () {
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         ],
-        "testDrawLine5"
+        "testDrawLine6"
     );
 };
 

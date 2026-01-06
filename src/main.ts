@@ -1,6 +1,7 @@
 import { vec4ToPoint } from "./utils/common";
 import { drawLine } from "./utils/draw/line";
 import { multiply, ndc2Screen, projection, rotate, Vec4, viewMat } from "./utils/matrix";
+import { perspectiveDivide } from "./utils/matrix/perspectiveDivide";
 
 const main = function () {
   const canvas = document.getElementById("canvas") as HTMLCanvasElement;
@@ -15,9 +16,9 @@ const main = function () {
   const ndc2ScreenMat = ndc2Screen(w, h);
 
   const imageData = new ImageData(w, h);
-  const p1 = vec4ToPoint(multiply(ndc2ScreenMat, multiply(mvp, new Vec4([0, 5, -5, 1])).perspectiveDivide()));
-  const p2 = vec4ToPoint(multiply(ndc2ScreenMat, multiply(mvp, new Vec4([5, 0, -5, 1])).perspectiveDivide()));
-  const p3 = vec4ToPoint(multiply(ndc2ScreenMat, multiply(mvp, new Vec4([-5, -5, -5, 1])).perspectiveDivide()));
+  const p1 = vec4ToPoint(multiply(ndc2ScreenMat, perspectiveDivide(multiply(mvp, new Vec4([0, 5, -5, 1])))));
+  const p2 = vec4ToPoint(multiply(ndc2ScreenMat, perspectiveDivide(multiply(mvp, new Vec4([5, 0, -5, 1])))));
+  const p3 = vec4ToPoint(multiply(ndc2ScreenMat, perspectiveDivide(multiply(mvp, new Vec4([-5, -5, -5, 1])))));
 
   drawLine(imageData, p1, p2, { r: 255, g: 0, b: 0, a: 255 });
   drawLine(imageData, p2, p3, { r: 0, g: 255, b: 0, a: 255 });
