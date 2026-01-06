@@ -26,7 +26,6 @@ const main = function () {
 
   const ctx = canvas.getContext("2d")!;
   ctx.putImageData(imageData, 0, 0);
-  console.log(Array.from(imageData.data));
 };
 
 main();
