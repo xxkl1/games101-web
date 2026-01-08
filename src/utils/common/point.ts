@@ -16,7 +16,18 @@ const vec3ToPoint = function (v: Vec3) : Point {
   }
 }
 
+/**
+ * 获取点在buffer中的index，buffer像素顺序是从上到下，从左到右
+ * @param p 
+ * @param width 
+ * @returns 
+ */
+const getBufferIndex = function (p: Point, width: number) {
+  return (p.y * width + p.x) * 4
+}
+
 export {
   vec4ToPoint,
   vec3ToPoint,
+  getBufferIndex,
 }

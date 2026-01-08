@@ -1,3 +1,4 @@
+import { getBufferIndex } from "../common/point";
 import type { Color, Point } from "./type";
 
 /**
@@ -15,7 +16,7 @@ const drawPoint = function (imageData: ImageData, point: Point, color: Color) {
         return;
     }
 
-    const index = (y * imageData.width + x) * 4
+    const index = getBufferIndex({ x, y }, imageData.width);
     imageData.data.set([color.r, color.g, color.b, color.a], index);
 }
 
