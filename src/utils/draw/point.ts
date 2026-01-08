@@ -1,7 +1,8 @@
 import type { Color, Point } from "./type";
 
 /**
- * 画布绘制一个点，最左上角点是(1, 1)
+ * 画布绘制一个点，屏幕画布最左上角的点是(1, 1)
+ * 可以传入x, y为0的点，但是不会被绘制到屏幕上
  * @param imageData 画布，imageData格式 
  * @param point 位置
  * @param color 颜色
