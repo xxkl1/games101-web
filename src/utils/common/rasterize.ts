@@ -8,6 +8,30 @@ import { getBufferIndex, vec3ToPoint } from "./point";
 import { insideTriangle } from "./triangle";
 import type { TriangleVec4s, TriangleVec3s } from "./type";
 
+const ssaaBuffer2ImageData = function (imageData: ImageData, ssaaBuffer: Color[], ssaa: number) {
+    const sampleCount = ssaa * ssaa;
+    const w = imageData.width;
+    const h = imageData.height;
+
+    for (let i = 0; i < w * h; i++) {
+        let r = 0;
+        let g = 0;
+        let b = 0;
+        for (let j = 0; j < sampleCount; j++) {
+            const sample = ssaaBuffer[i * sampleCount + j];
+            r += sample.r;
+            g += sample.g;
+            b += sample.b;
+        }
+        r /= sampleCount;
+        g /= sampleCount;
+        b /= sampleCount;
+
+        imageData.data.set([r, g, b, 255], i * 4);
+    }
+    return ;
+}
+
 const getTriangleRasterize = function (params: {
     triangle: TriangleVec4s;
     matMVP: Mat4;
@@ -71,11 +95,14 @@ const rasterizer = function (params: {
     matProjection: Mat4;
     colorList: Color[];
     imageData: ImageData;
+    ssaa?: number;
 }) {
-    const { triangleList, w, h, matModel, matView, matProjection, colorList, imageData } = params;
+    const { triangleList, w, h, matModel, matView, matProjection, colorList, imageData, ssaa = 2 } = params;
     const mvp = multiply(matProjection, multiply(matView, matModel));
     const matNdc2Screen = ndc2Screen(w, h);
-    const depthBuffer : number[] = new Array(w * h).fill(Infinity);
+    const bufferLenSass = w * h * ssaa * ssaa
+    const depthBuffer : number[] = new Array(bufferLenSass).fill(Infinity);
+    const ssaaBuffer : Color[] = new Array(bufferLenSass).fill({ r: 0, g: 0, b: 0, a: 255 });
 
     for (let i = 0; i < triangleList.length; i++) {
         const triangle = triangleList[i];
@@ -89,20 +116,29 @@ const rasterizer = function (params: {
 
         for (let x = aabb.xMin; x <= aabb.xMax; x++) {
             for (let y = aabb.yMin; y <= aabb.yMax; y++) {
-                if (insideTriangle({ x, y }, triangleVec3sToTrianglePoints(t.triangleVec3s))) {
-                    const { alpha, beta, gamma } = computeBarycentric2D({ x, y }, triangleVec3sToTrianglePoints(t.triangleVec3s));
-                    const v4d = t.triangleVec4sAfterMVP;
-                    const wReciprocal = 1.0 / (alpha / v4d.p1.value[3] + beta / v4d.p2.value[3] + gamma / v4d.p3.value[3]);
-                    const zInterpolated = (alpha * v4d.p1.value[2] / v4d.p1.value[3] + beta * v4d.p2.value[2] / v4d.p2.value[3] + gamma * v4d.p3.value[2] / v4d.p3.value[3]) * wReciprocal;
-                    const index = getBufferIndex({ x, y }, w);
-                    if (zInterpolated < depthBuffer[index]) {
-                        depthBuffer[index] = zInterpolated;
-                        setPoint(imageData, { x, y }, t.color);
+                for (let j = 0; j < ssaa; j++) {
+                    for (let i = 0; i < ssaa; i++) {
+                        // 计算子采样点的位置
+                        const sampleX = x + 1.0 / (2 * ssaa) + i * 1.0 / ssaa;
+                        const sampleY = y + 1.0 / (2 * ssaa) + j * 1.0 / ssaa;
+                        if (insideTriangle({ x: sampleX, y: sampleY }, triangleVec3sToTrianglePoints(t.triangleVec3s))) {
+                            const { alpha, beta, gamma } = computeBarycentric2D({ x, y }, triangleVec3sToTrianglePoints(t.triangleVec3s));
+                            const v4d = t.triangleVec4sAfterMVP;
+                            const wReciprocal = 1.0 / (alpha / v4d.p1.value[3] + beta / v4d.p2.value[3] + gamma / v4d.p3.value[3]);
+                            const zInterpolated = (alpha * v4d.p1.value[2] / v4d.p1.value[3] + beta * v4d.p2.value[2] / v4d.p2.value[3] + gamma * v4d.p3.value[2] / v4d.p3.value[3]) * wReciprocal;
+                            const index = getBufferIndex({ x, y }, w) * ssaa * ssaa + (j * ssaa + i);
+                            if (zInterpolated < depthBuffer[index]) {
+                                depthBuffer[index] = zInterpolated;
+                                ssaaBuffer[index] = t.color;
+                            }
+                        }
                     }
                 }
             }
         }
     }
+
+    ssaaBuffer2ImageData(imageData, ssaaBuffer, ssaa);
 };
 
 export {
