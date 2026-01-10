@@ -8,17 +8,27 @@ const main = function () {
 
   const imageData = new ImageData(w, h);
   rasterizer({
-    triangle: {
-      p1: new Vec4([0, 5, -5, 1]),
-      p2: new Vec4([5, 0, -5, 1]),
-      p3: new Vec4([-5, -5, -5, 1]),
-    },
+    triangleList: [
+      {
+        p1: new Vec4([2, 0, -2, 1]),
+        p2: new Vec4([0, 2, -2, 1]),
+        p3: new Vec4([-2, 0, -2, 1]),
+      },
+      {
+        p1: new Vec4([3.5, -1, -5, 1]),
+        p2: new Vec4([2.5, 1.5, -5, 1]),
+        p3: new Vec4([-1, 0.5, -5, 1]),
+      },
+    ],
     w,
     h,
-    matModel: rotate(new Vec4([0, 0, 1, 1]), Math.PI / 4),
-    matView: viewMat(new Vec4([0, 0, 15, 1]), new Vec4([0, 0, -5, 1])),
-    matProjection: projection(45, w / h, 0.1, 100),
-    color: { r: 255, g: 0, b: 0, a: 255 },
+    matModel: rotate(new Vec4([0, 0, 1, 1]), 0),
+    matView: viewMat(new Vec4([0, 0, 5, 1]), new Vec4([0, 0, -5, 1])),
+    matProjection: projection(45, w / h, 0.1, 50),
+    colorList: [
+      { r: 217, g: 238, b: 185, a: 255 },
+      { r: 185, g: 217, b: 238, a: 255 },
+    ],
     imageData: imageData,
   })
 

@@ -23,7 +23,7 @@ const vec3ToPoint = function (v: Vec3) : Point {
  * @returns 
  */
 const getBufferIndex = function (p: Point, width: number) {
-  return (p.y * width + p.x) * 4
+  return (p.y * width + p.x)
 }
 
 export {
