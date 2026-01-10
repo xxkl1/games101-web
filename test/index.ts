@@ -3,6 +3,7 @@ import { testMatrix } from "./matrix";
 import { testDrawMVP } from "./mvp";
 import { testBarycentric } from "./barycentric";
 import { testInsideTriangle } from "./insideTriangle";
+import { testZBuffer } from "./zBuffer";
 
 const test = function () {
   testMatrix();
@@ -10,6 +11,7 @@ const test = function () {
   testDrawMVP();
   testBarycentric();
   testInsideTriangle();
+  testZBuffer();
 }
 
 test();
