@@ -3,7 +3,7 @@ import { rasterizer } from "../src/utils/common/rasterize";
 import { ensure } from "./ensure";
 
 /**
- * 测试水平线
+ * 深度测试，快照测试
  */
 const testZBuffer = function () {
     const w = 10;
