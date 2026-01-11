@@ -87,22 +87,35 @@ const triangleVec3sToTrianglePoints = function (triangleVec3s: TriangleVec3s) {
 }
 
 const rasterizer = function (params: {
-    triangleList: TriangleVec4s[];
+    positions: number[];
+    colors: number[];
+    indices: number[];
     w: number;
     h: number;
     matModel: Mat4;
     matView: Mat4;
     matProjection: Mat4;
-    colorList: Color[];
     imageData: ImageData;
     ssaa?: number;
 }) {
-    const { triangleList, w, h, matModel, matView, matProjection, colorList, imageData, ssaa = 2 } = params;
+    const { w, h, matModel, matView, matProjection, positions, colors, indices, imageData, ssaa = 2 } = params;
     const mvp = multiply(matProjection, multiply(matView, matModel));
     const matNdc2Screen = ndc2Screen(w, h);
     const bufferLenSass = w * h * ssaa * ssaa
     const depthBuffer : number[] = new Array(bufferLenSass).fill(Infinity);
     const ssaaBuffer : Color[] = new Array(bufferLenSass).fill({ r: 0, g: 0, b: 0, a: 255 });
+
+    // TODO: 后面数据还是都使用数组来存放吧，虽然数组语意性没那么好，但是可以避免很多的数据结构转换，且查询性能会更好
+    const triangleList: TriangleVec4s[] = [];
+    const colorList: Color[] = [];
+    for (let i = 0; i < indices.length; i += 3) {
+        const p1 = positions.slice(indices[i] * 3, indices[i] * 3 + 3);
+        const p2 = positions.slice(indices[i + 1] * 3, indices[i + 1] * 3 + 3);
+        const p3 = positions.slice(indices[i + 2] * 3, indices[i + 2] * 3 + 3);
+        const c = colors.slice(indices[i] * 3, indices[i] * 3 + 3);
+        triangleList.push({ p1: new Vec4([...p1, 1]), p2: new Vec4([...p2, 1]), p3: new Vec4([...p3, 1]) });
+        colorList.push({ r: c[0], g: c[1], b: c[2], a: 255 })
+    }
 
     for (let i = 0; i < triangleList.length; i++) {
         const triangle = triangleList[i];
