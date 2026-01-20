@@ -1,46 +1,38 @@
-import { rasterizer } from "./utils/common/rasterize";
-import { projection, rotate, Vec4, viewMat } from "./utils/matrix";
+import { rasterizer } from "./rasterize";
+import { loadImageByImageUrl } from "./imageData/load";
+import { projection, rotate, cameraView } from "./transform";
+import { loadObjFromUrl } from "./obj";
+import { textureShader } from "./shader";
 
-const main = function () {
+const main = async function () {
   const canvas = document.getElementById("canvas") as HTMLCanvasElement;
   const w = canvas.width;
   const h = canvas.height;
+  const texture = await loadImageByImageUrl('/models/spot/spot_texture.png');
 
-  // 定义三角形的三个顶点位置
-  const positions = [
-      2, 0, -2,   // 顶点0
-      0, 2, -2,   // 顶点1
-      -2, 0, -2,   // 顶点2
+  const model = await loadObjFromUrl('/models/spot/spot_triangulated_good.obj');
+  const mesh = model.meshes[0];
 
-      3.5, -1, -5 ,   // 顶点3
-      2.5, 1.5, -5,   // 顶点4
-      -1, 0.5, -5  // 顶点5
-  ];
-
-  // 定义索引（两个三角形）
-  const indices = [0, 1, 2, 3, 4, 5];
-
-  // 定义顶点颜色（每个顶点对应一个RGB颜色）
-  const colors = [
-      217.0, 238.0, 185.0,  // 顶点0 - 浅绿色
-      217.0, 238.0, 185.0,  // 顶点1 - 浅绿色
-      217.0, 238.0, 185.0,  // 顶点2 - 浅绿色
-      185.0, 217.0, 238.0,  // 顶点3 - 浅蓝色
-      185.0, 217.0, 238.0,  // 顶点4 - 浅蓝色
-      185.0, 217.0, 238.0,  // 顶点5 - 浅蓝色
-  ]
+  const colors: number[] = [];
+  for (let i = 0; i < mesh.positions.length / 3; i++) {
+      colors.push(255, 255, 255, 255);
+  }
 
   const imageData = new ImageData(w, h);
   rasterizer({
-    positions,
+    positions: mesh.positions,
     colors,
-    indices,
+    indices: mesh.indices,
     w,
     h,
-    matModel: rotate(new Vec4([0, 0, 1, 1]), 0),
-    matView: viewMat(new Vec4([0, 0, 5, 1]), new Vec4([0, 0, -5, 1])),
+    matModel: rotate([0, 1, 0, 1], Math.PI / 180 * 135),
+    matView: cameraView([0, 0, 5, 1], [0, 0, -5, 1]),
     matProjection: projection(45, w / h, 0.1, 50),
     imageData: imageData,
+    fragmentShader: textureShader,
+    texture,
+    normals: mesh.normals,
+    texcoords: mesh.texcoords,
   })
 
   const ctx = canvas.getContext("2d")!;

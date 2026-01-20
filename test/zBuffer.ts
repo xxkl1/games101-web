@@ -1,5 +1,6 @@
-import { projection, rotate, Vec4, viewMat } from "../src/utils/matrix";
-import { rasterizer } from "../src/utils/common/rasterize";
+import { projection, rotate, cameraView } from "../src/transform";
+import { rasterizer } from "../src/rasterize";
+import { normalShader } from "../src/Shader";
 import { ensure } from "./ensure";
 
 /**
@@ -37,13 +38,17 @@ const testZBuffer = function () {
         positions,
         colors,
         indices,
+        texcoords: [],
+        normals: [],
         w,
         h,
-        matModel: rotate(new Vec4([0, 0, 1, 1]), 0),
-        matView: viewMat(new Vec4([0, 0, 5, 1]), new Vec4([0, 0, -5, 1])),
+        matModel: rotate([0, 0, 1, 1], 0),
+        matView: cameraView([0, 0, 5, 1], [0, 0, -5, 1]),
         matProjection: projection(45, w / h, 0.1, 50),
         imageData: imageData,
         ssaa: 1,
+        fragmentShader: normalShader,
+        texture: new ImageData(1, 1),
     });
 
     ensure(
