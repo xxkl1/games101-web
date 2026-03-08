@@ -223,6 +223,7 @@ const rasterizer = function (params: {
                                     triangle.normals[0], triangle.normals[1], triangle.normals[2],
                                     1.0 / wReciprocal
                                 );
+                                interpolatedNormal = multiplyMat4Vec4(matModel, [interpolatedNormal[0], interpolatedNormal[1], interpolatedNormal[2], 0]);
                             }
 
                             // 透视校正插值纹理坐标
